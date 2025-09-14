@@ -14,7 +14,7 @@ const MAX_SCORE = 10;
 const CAR_W = 0.18;
 const CAR_H = 0.22;
 
-const SPEED_SCALE = 3;
+const SPEED_SCALE = 0.55; // <<--- change this to slow/speed everything globally
 
 var canvas, gl, vertices, bufferId, vPosition, colorLoc;
 var lane0Verts, lane0Buffer, lane1Verts, lane1Buffer, lane2Verts, lane2Buffer;
@@ -83,7 +83,6 @@ function detectOverlap(a, b){
 }
 function randIn(a, b){ return a + Math.random() * (b - a); }
 
-// Slower ranges + global scale
 const laneConfig = [
 	{ dir:+1, minDelay:1200, maxDelay:2200, speedMin:0.004,  speedMax:0.007  },
 	{ dir:-1, minDelay:1200, maxDelay:2200, speedMin:0.004,  speedMax:0.0075 },
@@ -93,10 +92,9 @@ const laneConfig = [
 ];
 for (let k = 0; k < laneConfig.length; k++){
 	const cfg = laneConfig[k];
-	cfg.speed = randIn(cfg.speedMin, cfg.speedMax) * SPEED_SCALE;
+	cfg.speed = randIn(cfg.speedMin, cfg.speedMax); // base speed ONLY; scaling applied per-frame in Car
 }
 
-// Overlap-safe spawn window around edge (blocks cars just inside/outside)
 function laneHasRoom(laneIndex, dir){
 	const spawnEdge = (dir > 0) ? -1.2 : 1.2;
 	const minGap = CAR_W * 2.0;
@@ -199,7 +197,7 @@ window.onload = function init() {
 	scoreBuffer = gl.createBuffer();
 	updateScoreLines();
 
-	const deps = { gl, vPosition, colorLoc, laneYMid, makeCarQuad, flatten };
+	const deps = { gl, vPosition, colorLoc, laneYMid, makeCarQuad, flatten, speedScale: SPEED_SCALE };
 
 	const laneColors = [
 		[0.90, 0.25, 0.25, 1],

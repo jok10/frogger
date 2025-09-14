@@ -6,11 +6,12 @@ export class Car {
 		this.laneYMid = deps.laneYMid;
 		this.makeCarQuad = deps.makeCarQuad;
 		this.flatten = deps.flatten;
+		this.speedScale = deps.speedScale ?? 1.0;
 
 		this.k = laneIndex;
-		this.speed = speed;
+		this.speed = speed;   // base lane speed
 		this.dir = dir;
-		this.color = this.randomColor();
+		this.color = colorRGBA || this.randomColor();
 
 		const startX = (this.dir > 0) ? -1.2 : 1.2;
 		const y = this.laneYMid(this.k);
@@ -24,7 +25,7 @@ export class Car {
 	updateAndUpload(dt) {
 		const gl = this.gl;
 
-		const dx = this.speed * this.dir * (dt * 60);
+		const dx = this.speed * this.speedScale * this.dir * (dt * 60);
 		for (let i = 0; i < this.vertices.length; i++) this.vertices[i][0] += dx;
 
 		let minX = this.vertices[0][0], maxX = this.vertices[0][0];
