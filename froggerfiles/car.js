@@ -24,11 +24,13 @@ export class Car {
 	
 updateAndUpload(dt) {
 	const gl = this.gl;
+	const dx = this.speed * this.dir * dt; 
+	for (let i = 0; i < this.vertices.length; i++) {
+		this.vertices[i][0] += dx;
+	}
 
-	const dx = this.speed * this.dir * (dt * 60);
-	for (let i = 0; i < this.vertices.length; i++) this.vertices[i][0] += dx;
-
-	let minX = this.vertices[0][0], maxX = this.vertices[0][0];
+	let minX = this.vertices[0][0];
+	let maxX = this.vertices[0][0];
 	for (let i = 1; i < this.vertices.length; i++) {
 		const x = this.vertices[i][0];
 		if (x < minX) minX = x;
@@ -48,6 +50,7 @@ updateAndUpload(dt) {
 	gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
 	gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.flatten(this.vertices));
 }
+
 
 	randomColor() {
 		for (;;) {
