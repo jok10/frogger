@@ -21,33 +21,33 @@ export class Car {
 		this.gl.bufferData(this.gl.ARRAY_BUFFER, this.flatten(this.vertices), this.gl.DYNAMIC_DRAW);
 	}
 
-	updateAndUpload() {
-		const gl = this.gl;
+	
+updateAndUpload(dt) {
+	const gl = this.gl;
 
-		const dx = this.speed * this.dir;
-		for (let i = 0; i < this.vertices.length; i++) this.vertices[i][0] += dx;
+	const dx = this.speed * this.dir * (dt * 60);
+	for (let i = 0; i < this.vertices.length; i++) this.vertices[i][0] += dx;
 
-		let minX = this.vertices[0][0];
-		let maxX = this.vertices[0][0];
-		for (let i = 1; i < this.vertices.length; i++) {
-			let x = this.vertices[i][0];
-			if (x < minX) minX = x;
-			if (x > maxX) maxX = x;
-		}
-
-		if (maxX < -1.1 && this.dir < 0) {
-			const shift = 2.4;
-			for (let i = 0; i < this.vertices.length; i++) this.vertices[i][0] += shift;
-			this.color = this.randomColor();
-		} else if (minX > 1.1 && this.dir > 0) {
-			const shift = -2.4;
-			for (let i = 0; i < this.vertices.length; i++) this.vertices[i][0] += shift;
-			this.color = this.randomColor();
-		}
-
-		gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
-		gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.flatten(this.vertices));
+	let minX = this.vertices[0][0], maxX = this.vertices[0][0];
+	for (let i = 1; i < this.vertices.length; i++) {
+		const x = this.vertices[i][0];
+		if (x < minX) minX = x;
+		if (x > maxX) maxX = x;
 	}
+
+	if (maxX < -1.1 && this.dir < 0) {
+		const shift = 2.4;
+		for (let i = 0; i < this.vertices.length; i++) this.vertices[i][0] += shift;
+		this.color = this.randomColor();
+	} else if (minX > 1.1 && this.dir > 0) {
+		const shift = -2.4;
+		for (let i = 0; i < this.vertices.length; i++) this.vertices[i][0] += shift;
+		this.color = this.randomColor();
+	}
+
+	gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
+	gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.flatten(this.vertices));
+}
 
 	randomColor() {
 		for (;;) {

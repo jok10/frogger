@@ -23,6 +23,7 @@ var scoreLines = [];
 var scoreBuffer;
 var gameOver = false;
 var cars = [];
+var lastTime = null;
 
 function laneYLow(k){ return ROAD_Y0 + k * laneHeight; }
 function laneYHigh(k){ return laneYLow(k) + laneHeight; }
@@ -202,10 +203,16 @@ window.onload = function init() {
 		};
 		schedule();
 	}
-	render();
+	window.requestAnimFrame(render);
+
 };
 
-function render(){
+function render(t){
+	if (typeof render.lastTime === "undefined") render.lastTime = t;
+	let dt = (t - render.lastTime) / 1000;
+	render.lastTime = t;
+	if (dt > 0.1) dt = 0.1; 
+
 	gl.clear(gl.COLOR_BUFFER_BIT);
 
 	if (colorLoc) gl.uniform4fv(colorLoc, new Float32Array([0.68, 0.68, 0.68, 1]));
@@ -233,7 +240,17 @@ function render(){
 	gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
 	gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
 
-	for (let c of cars) { c.updateAndUpload(); c.draw(); }
+	for (let c of cars){
+		c.updateAndUpload(dt);
+		c.draw();
+	}
+
+	if (scoreLines.length > 0){
+		gl.uniform4fv(colorLoc, new Float32Array([0, 0, 0, 1]));
+		gl.bindBuffer(gl.ARRAY_BUFFER, scoreBuffer);
+		gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
+		gl.drawArrays(gl.LINES, 0, scoreLines.length);
+	}
 
 	const frogBox = findBoundary(vertices);
 	let collided = false;
@@ -263,13 +280,7 @@ function render(){
 		updateScoreLines();
 	}
 
-	if (scoreLines.length > 0){
-		gl.uniform4fv(colorLoc, new Float32Array([0, 0, 0, 1]));
-		gl.bindBuffer(gl.ARRAY_BUFFER, scoreBuffer);
-		gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
-		gl.drawArrays(gl.LINES, 0, scoreLines.length);
-	}
-
 	if (score >= MAX_SCORE) { gameOver = true; return; }
 	window.requestAnimFrame(render);
 }
+
