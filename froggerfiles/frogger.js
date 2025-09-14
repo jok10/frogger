@@ -148,23 +148,42 @@ window.onload = function init() {
 	gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
 	gl.enableVertexAttribArray(vPosition);
 
-	window.addEventListener("keydown", function(e){
-		if (gameOver) return;
-		let xmove = 0.0, ymove = 0.0;
-		switch(e.keyCode){
-			case 37: xmove = -0.11; break;
-			case 39: xmove =  0.11; break;
-			case 38: if (!facingUp) { flipFrog(vertices); facingUp = true; } ymove = -0.11; break;
-			case 40: if (facingUp) { flipFrog(vertices); facingUp = false; } ymove =  0.09; break;
-			default: return;
-		}
-		for (let i = 0; i < vertices.length; i++){
-			vertices[i][0] += xmove;
-			vertices[i][1] -= ymove;
-		}
-		gl.bindBuffer(gl.ARRAY_BUFFER, bufferId);
-		gl.bufferSubData(gl.ARRAY_BUFFER, 0, flatten(vertices));
-	});
+	window.addEventListener("keydown", (e) => {
+	if (gameOver) return;
+
+	let xmove = 0.0, ymove = 0.0;
+
+	switch (e.key) {
+		case "ArrowLeft":
+			e.preventDefault();
+			xmove = -0.11;
+			break;
+		case "ArrowRight":
+			e.preventDefault();
+			xmove =  0.11;
+			break;
+		case "ArrowUp":
+			e.preventDefault();
+			if (!facingUp) { flipFrog(vertices); facingUp = true; }
+			ymove = -0.11;
+			break;
+		case "ArrowDown":
+			e.preventDefault();
+			if (facingUp) { flipFrog(vertices); facingUp = false; }
+			ymove =  0.09;
+			break;
+		default:
+			return;
+	}
+
+	for (let i = 0; i < vertices.length; i++) {
+		vertices[i][0] += xmove;
+		vertices[i][1] -= ymove; // your sign convention
+	}
+
+	gl.bindBuffer(gl.ARRAY_BUFFER, bufferId);
+	gl.bufferSubData(gl.ARRAY_BUFFER, 0, flatten(vertices));
+});
 
 	lane0Verts = makeStrip(laneYLow(0) + LANE_MARGIN, laneYHigh(0) - LANE_MARGIN);
 	lane0Buffer = gl.createBuffer();
