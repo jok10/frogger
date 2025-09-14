@@ -84,11 +84,11 @@ function detectOverlap(a, b){
 function randIn(a, b){ return a + Math.random() * (b - a); }
 
 const laneConfig = [
-	{ dir:+1, minDelay:1200, maxDelay:2200, speedMin:0.004,  speedMax:0.0007  },
-	{ dir:-1, minDelay:1200, maxDelay:2200, speedMin:0.004,  speedMax:0.00075 },
-	{ dir:+1, minDelay:1100, maxDelay:2000, speedMin:0.0035, speedMax:0.00065 },
-	{ dir:-1, minDelay:1100, maxDelay:2000, speedMin:0.0035, speedMax:0.00068 },
-	{ dir:+1, minDelay:1200, maxDelay:2200, speedMin:0.004,  speedMax:0.0007  }
+	{ dir:+1, minDelay:1200, maxDelay:2200, speedMin:0.004,  speedMax:0.00007  },
+	{ dir:-1, minDelay:1200, maxDelay:2200, speedMin:0.004,  speedMax:0.000075 },
+	{ dir:+1, minDelay:1100, maxDelay:2000, speedMin:0.0035, speedMax:0.000065 },
+	{ dir:-1, minDelay:1100, maxDelay:2000, speedMin:0.0035, speedMax:0.000068 },
+	{ dir:+1, minDelay:1200, maxDelay:2200, speedMin:0.004,  speedMax:0.00007  }
 ];
 
 
