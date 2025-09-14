@@ -109,11 +109,11 @@ function resetFrog(){
 }
 
 const laneConfig = [
-	{ dir: +1, minDelay: 1200, maxDelay: 2200, speedMin: 0.5, speedMax: 0.8 },
-	{ dir: -1, minDelay: 1200, maxDelay: 2200, speedMin: 0.5, speedMax: 0.8 },
-	{ dir: +1, minDelay: 1000, maxDelay: 2000, speedMin: 0.4, speedMax: 0.7 },
-	{ dir: -1, minDelay: 1000, maxDelay: 2000, speedMin: 0.4, speedMax: 0.7 },
-	{ dir: +1, minDelay: 1200, maxDelay: 2200, speedMin: 0.5, speedMax: 0.8 }
+  { dir:+1, minDelay:1200, maxDelay:2200, speedMin:0.004, speedMax:0.0007 },
+  { dir:-1, minDelay:1200, maxDelay:2200, speedMin:0.004, speedMax:0.00075 },
+  { dir:+1, minDelay:1100, maxDelay:2000, speedMin:0.0035, speedMax:0.00065 },
+  { dir:-1, minDelay:1100, maxDelay:2000, speedMin:0.0035, speedMax:0.00068 },
+  { dir:+1, minDelay:1200, maxDelay:2200, speedMin:0.004, speedMax:0.0007 }
 ];
 for (let k = 0; k < laneConfig.length; k++){
 	const cfg = laneConfig[k];
@@ -207,45 +207,46 @@ window.onload = function init() {
 
 };
 
-
-function render(t) {
-	if (lastTime === null) lastTime = t;
-	const dt = (t - lastTime) / 1000.0; // convert ms → seconds
-	lastTime = t;
+function render(t){
+	
+	if (typeof render.lastTime === "undefined") render.lastTime = t;
+	let dt = (t - render.lastTime) / 1000;
+	render.lastTime = t;
+	if (dt > 0.1) dt = 0.1; 
 
 	gl.clear(gl.COLOR_BUFFER_BIT);
 
-	gl.uniform4fv(colorLoc, new Float32Array([0.68, 0.68, 0.68, 1]));
+	if (colorLoc) gl.uniform4fv(colorLoc, new Float32Array([0.68, 0.68, 0.68, 1]));
 	gl.bindBuffer(gl.ARRAY_BUFFER, lane0Buffer);
 	gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
 	gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
 
-	gl.uniform4fv(colorLoc, new Float32Array([0.62, 0.62, 0.62, 1]));
+	if (colorLoc) gl.uniform4fv(colorLoc, new Float32Array([0.62, 0.62, 0.62, 1]));
 	gl.bindBuffer(gl.ARRAY_BUFFER, lane1Buffer);
 	gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
 	gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
 
-	gl.uniform4fv(colorLoc, new Float32Array([0.66, 0.66, 0.66, 1]));
+	if (colorLoc) gl.uniform4fv(colorLoc, new Float32Array([0.66, 0.66, 0.66, 1]));
 	gl.bindBuffer(gl.ARRAY_BUFFER, lane2Buffer);
 	gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
 	gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
 
-	gl.uniform4fv(colorLoc, new Float32Array([0.60, 0.60, 0.60, 1]));
+	if (colorLoc) gl.uniform4fv(colorLoc, new Float32Array([0.60, 0.60, 0.60, 1]));
 	gl.bindBuffer(gl.ARRAY_BUFFER, lane3Buffer);
 	gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
 	gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
 
-	gl.uniform4fv(colorLoc, new Float32Array([0.64, 0.64, 0.64, 1]));
+	if (colorLoc) gl.uniform4fv(colorLoc, new Float32Array([0.64, 0.64, 0.64, 1]));
 	gl.bindBuffer(gl.ARRAY_BUFFER, lane4Buffer);
 	gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
 	gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
 
-	for (let c of cars) {
-		c.updateAndUpload(dt); // pass dt to car update
+	for (let c of cars){
+		c.updateAndUpload(dt);
 		c.draw();
 	}
 
-	if (scoreLines.length > 0) {
+	if (scoreLines.length > 0){
 		gl.uniform4fv(colorLoc, new Float32Array([0, 0, 0, 1]));
 		gl.bindBuffer(gl.ARRAY_BUFFER, scoreBuffer);
 		gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
@@ -254,21 +255,17 @@ function render(t) {
 
 	const frogBox = findBoundary(vertices);
 	let collided = false;
-	for (let c of cars) {
-		const carBox = findBoundary(c.vertices);
-		if (detectOverlap(frogBox, carBox)) {
-			collided = true;
-			break;
-		}
+	for (let c of cars){
+		if (detectOverlap(frogBox, findBoundary(c.vertices))) { collided = true; break; }
 	}
-	if (collided) {
+	if (collided){
 		score = 0;
 		goingToTop = true;
 		updateScoreLines();
 		resetFrog();
 	}
 
-	gl.uniform4fv(colorLoc, new Float32Array([0.25, 0.65, 0.25, 1]));
+	if (colorLoc) gl.uniform4fv(colorLoc, new Float32Array([0.25, 0.65, 0.25, 1]));
 	gl.bindBuffer(gl.ARRAY_BUFFER, bufferId);
 	gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
 	gl.drawArrays(gl.TRIANGLE_FAN, 0, vertices.length);
@@ -284,13 +281,7 @@ function render(t) {
 		updateScoreLines();
 	}
 
-	if (score >= MAX_SCORE) {
-		gameOver = true;
-	}
-
-	if (!gameOver) {
-		window.requestAnimFrame(render);
-	}
+	if (score >= MAX_SCORE) { gameOver = true; return; }
+	window.requestAnimFrame(render);
 }
-
 
