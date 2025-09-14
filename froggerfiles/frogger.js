@@ -5,7 +5,7 @@ const totalRoadHeight = 1.50;
 const laneHeight = totalRoadHeight / 5.0;
 const ROAD_Y0 = -1.0 + sidewalkHeight;
 const LANE_MARGIN = 0.02;
-const MAX_CARS_PER_LANE = 4;
+const MAX_CARS_PER_LANE = 2;
 
 const TOP_GOAL_Y = ROAD_Y0 + totalRoadHeight;
 const BOTTOM_GOAL_Y = ROAD_Y0 + 0.05;
@@ -14,7 +14,7 @@ const MAX_SCORE = 10;
 const CAR_W = 0.18;
 const CAR_H = 0.22;
 
-const SPEED_SCALE = 0.32; 
+const SPEED_SCALE = 0.52; 
 
 var canvas, gl, vertices, bufferId, vPosition, colorLoc;
 var lane0Verts, lane0Buffer, lane1Verts, lane1Buffer, lane2Verts, lane2Buffer;
@@ -84,11 +84,11 @@ function detectOverlap(a, b){
 function randIn(a, b){ return a + Math.random() * (b - a); }
 
 const laneConfig = [
-	{ dir:+1, minDelay:1200, maxDelay:2200, speedMin:0.004,  speedMax:0.007  },
-	{ dir:-1, minDelay:1200, maxDelay:2200, speedMin:0.004,  speedMax:0.0075 },
-	{ dir:+1, minDelay:1100, maxDelay:2000, speedMin:0.0035, speedMax:0.0065 },
-	{ dir:-1, minDelay:1100, maxDelay:2000, speedMin:0.0035, speedMax:0.0068 },
-	{ dir:+1, minDelay:1200, maxDelay:2200, speedMin:0.004,  speedMax:0.007  }
+	{ dir:+1, minDelay:2200, maxDelay:3200, speedMin:0.004,  speedMax:0.007  },
+	{ dir:-1, minDelay:2200, maxDelay:3200, speedMin:0.004,  speedMax:0.0075 },
+	{ dir:+1, minDelay:2100, maxDelay:3000, speedMin:0.0035, speedMax:0.0065 },
+	{ dir:-1, minDelay:2100, maxDelay:3000, speedMin:0.0035, speedMax:0.0068 },
+	{ dir:+1, minDelay:2200, maxDelay:3200, speedMin:0.004,  speedMax:0.007  }
 ];
 for (let k = 0; k < laneConfig.length; k++){
 	const cfg = laneConfig[k];
