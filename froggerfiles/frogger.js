@@ -14,7 +14,7 @@ const MAX_SCORE = 10;
 const CAR_W = 0.18;
 const CAR_H = 0.22;
 
-const SPEED_SCALE = 0.0095; 
+const SPEED_SCALE = 0.000000000005; 
 
 var canvas, gl, vertices, bufferId, vPosition, colorLoc;
 var lane0Verts, lane0Buffer, lane1Verts, lane1Buffer, lane2Verts, lane2Buffer;
