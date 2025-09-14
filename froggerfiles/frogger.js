@@ -5,7 +5,7 @@ const totalRoadHeight = 1.50;
 const laneHeight = totalRoadHeight / 5.0;
 const ROAD_Y0 = -1.0 + sidewalkHeight;
 const LANE_MARGIN = 0.02;
-const MAX_CARS_PER_LANE = 2;
+const MAX_CARS_PER_LANE = 3;
 
 const TOP_GOAL_Y = ROAD_Y0 + totalRoadHeight;
 const BOTTOM_GOAL_Y = ROAD_Y0 + 0.05;
@@ -14,7 +14,7 @@ const MAX_SCORE = 10;
 const CAR_W = 0.18;
 const CAR_H = 0.22;
 
-const SPEED_SCALE = 0.52; 
+const SPEED_SCALE = 0.42; 
 
 var canvas, gl, vertices, bufferId, vPosition, colorLoc;
 var lane0Verts, lane0Buffer, lane1Verts, lane1Buffer, lane2Verts, lane2Buffer;
@@ -178,7 +178,7 @@ window.onload = function init() {
 
 	for (let i = 0; i < vertices.length; i++) {
 		vertices[i][0] += xmove;
-		vertices[i][1] -= ymove; // your sign convention
+		vertices[i][1] -= ymove;
 	}
 
 	gl.bindBuffer(gl.ARRAY_BUFFER, bufferId);
