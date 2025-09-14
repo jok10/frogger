@@ -5,7 +5,7 @@ const totalRoadHeight = 1.50;
 const laneHeight = totalRoadHeight / 5.0;
 const ROAD_Y0 = -1.0 + sidewalkHeight;
 const LANE_MARGIN = 0.02;
-const MAX_CARS_PER_LANE = 2;
+const MAX_CARS_PER_LANE = 4;
 
 const TOP_GOAL_Y = ROAD_Y0 + totalRoadHeight;
 const BOTTOM_GOAL_Y = ROAD_Y0 + 0.05;
